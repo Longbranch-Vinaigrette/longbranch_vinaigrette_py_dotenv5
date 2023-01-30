@@ -32,12 +32,12 @@ class DotEnv5:
         """Encode dictionary"""
         if self.debug:
             print("\nDotEnv5 -> encode_dot_env():")
-        dot_env_encoder = DotEnvEncoder(data, debug=self.debug)
+        dot_env_encoder = DotEnvEncoder(data, path=self.path, debug=self.debug)
         return dot_env_encoder.dot_env_encode_data(data)
 
     def upsert_dot_env(self, data: dict):
         """Insert or replace data in the given path"""
         if self.debug:
             print("\nDotEnv5 -> upsert_dot_env():")
-        dot_env_encoder = DotEnvEncoder(data, with_comments=True, debug=self.debug)
+        dot_env_encoder = DotEnvEncoder(data, path=self.path, with_comments=True, debug=self.debug)
         return dot_env_encoder.upsert_dot_env()
