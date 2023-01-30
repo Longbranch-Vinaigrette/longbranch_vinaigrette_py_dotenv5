@@ -39,5 +39,5 @@ class DotEnv5:
         """Insert or replace data in the given path"""
         if self.debug:
             print("\nDotEnv5 -> upsert_dot_env():")
-        dot_env_encoder = DotEnvEncoder(data, debug=self.debug)
+        dot_env_encoder = DotEnvEncoder(data, with_comments=True, debug=self.debug)
         return dot_env_encoder.upsert_dot_env()

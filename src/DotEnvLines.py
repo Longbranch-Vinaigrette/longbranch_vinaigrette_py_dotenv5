@@ -2,7 +2,9 @@ from .DotEnvLine import DotEnvLine
 
 
 class DotEnvLines:
-    comments_keyword = "_dot_env_parser_comments"
+    special_data_keyword = "_dot_env_parser_"
+    comments_keyword = f"{special_data_keyword}comments"
+    endlines_keyword = f"{special_data_keyword}endline"
 
     def __init__(self,
                  lines: list,
@@ -17,15 +19,22 @@ class DotEnvLines:
         env_vars: dict = {}
         last_line_var_name = ""
 
+        if self.debug:
+            print("Comments enabled?: ", self.with_comments)
+
         for index, line in enumerate(self.lines):
             line: str = line
             dot_env_line = DotEnvLine(line)
 
             if self.debug:
+                print("\n")
                 print(line)
 
             # Check if it's empty
             if dot_env_line.is_line_empty():
+                # Add endline
+                env_vars[self.endlines_keyword + str(index)] = "\n"
+
                 # Next
                 continue
 
@@ -48,8 +57,12 @@ class DotEnvLines:
                 try:
                     # Comments
                     if dot_env_line.is_line_a_comment():
+                        if self.debug:
+                            print("Line is a comment")
                         if self.with_comments:
-                            env_vars[self.comments_keyword + str(index)] = line
+                            # We have to append an endline at the end
+                            env_vars[self.comments_keyword + str(index)] = f"{line}\n"
+
                             # It should end here
                             continue
                         else:
@@ -71,7 +84,7 @@ class DotEnvLines:
                     # If this throws an exception, it means that the previous lines may have
                     # been like this:
                     # [Some text] \
-                    #    Final text             <- We are in this line
+                    #    [Final text]             <- We are in this line
                     # NEXT_ENV_VAR=[something]
                     # Now we still have 'last_line_var_name'
                     # so we can just add the whole line and that's it.

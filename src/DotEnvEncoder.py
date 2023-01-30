@@ -5,9 +5,14 @@ from .DotEnvParser import DotEnvParser
 
 
 class DotEnvEncoder:
-    def __init__(self, data: dict, path: str = os.getcwd(), debug: bool = False):
+    def __init__(self,
+                 data: dict,
+                 path: str = os.getcwd(),
+                 with_comments: bool = False,
+                 debug: bool = False):
         self.data = data
         self.path = path
+        self.with_comments = with_comments
         self.debug = debug
 
         if self.debug:
@@ -24,10 +29,18 @@ class DotEnvEncoder:
         for key, value in data.items():
             key: str = key
 
-            if not key.startswith(DotEnvLines.comments_keyword):
-                encoded_environment_variables += f"{key}={value}\n"
-            else:
+            # It's a comment
+            if key.startswith(DotEnvLines.comments_keyword):
                 encoded_environment_variables += value
+                continue
+
+            # It's an endline
+            if key.startswith(DotEnvLines.endlines_keyword):
+                encoded_environment_variables += value
+                continue
+
+            # It's a variable
+            encoded_environment_variables += f"{key}={value}\n"
 
         return encoded_environment_variables
 
@@ -39,11 +52,11 @@ class DotEnvEncoder:
         # Merge given data + data in the .env file
         dot_env_parser = DotEnvParser(
             path=self.path,
-            with_comments=True,
+            with_comments=self.with_comments,
             debug=self.debug)
-        dot_env_data: dict = dot_env_parser.get_dot_env_data()
+        previous_dot_env_data: dict = dot_env_parser.get_dot_env_data()
         dot_env_data: dict = {
-            **dot_env_data,
+            **previous_dot_env_data,
             **self.data,
         }
 
