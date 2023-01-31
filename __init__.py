@@ -11,13 +11,14 @@ class DotEnv5:
         self.path = path
         self.debug = debug
 
-    def get_parsed_dot_env(self, with_comments: bool = False):
+    def get_parsed_dot_env(self, with_comments: bool = False, with_endlines: bool = False):
         """Get parsed data in .env"""
         if self.debug:
             print("\nDotEnv5 -> get_parsed_dot_env():")
         dot_env_parser = DotEnvParser(
             path=self.path,
             with_comments=with_comments,
+            with_endlines=with_endlines,
             debug=self.debug)
         return dot_env_parser.get_dot_env_data()
 
@@ -39,5 +40,10 @@ class DotEnv5:
         """Insert or replace data in the given path"""
         if self.debug:
             print("\nDotEnv5 -> upsert_dot_env():")
-        dot_env_encoder = DotEnvEncoder(data, path=self.path, with_comments=True, debug=self.debug)
+        dot_env_encoder = DotEnvEncoder(
+            data,
+            path=self.path,
+            with_comments=True,
+            with_endlines=True,
+            debug=self.debug)
         return dot_env_encoder.upsert_dot_env()

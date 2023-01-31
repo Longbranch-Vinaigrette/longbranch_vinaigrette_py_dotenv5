@@ -9,10 +9,12 @@ class DotEnvEncoder:
                  data: dict,
                  path: str = os.getcwd(),
                  with_comments: bool = False,
+                 with_endlines: bool = True,
                  debug: bool = False):
         self.data = data
         self.path = path
         self.with_comments = with_comments
+        self.with_endlines = with_endlines
         self.debug = debug
 
         if self.debug:
@@ -53,6 +55,7 @@ class DotEnvEncoder:
         dot_env_parser = DotEnvParser(
             path=self.path,
             with_comments=self.with_comments,
+            with_endlines=self.with_endlines,
             debug=self.debug)
         previous_dot_env_data: dict = dot_env_parser.get_dot_env_data()
         dot_env_data: dict = {

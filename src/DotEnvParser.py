@@ -11,10 +11,12 @@ class DotEnvParser:
     def __init__(self,
                  path: str = os.getcwd(),
                  with_comments: bool = False,
+                 with_endlines: bool = False,
                  debug: bool = False,
                  ):
         self.path = path
         self.with_comments = with_comments
+        self.with_endlines = with_endlines
         self.debug = debug
 
     def get_dot_env_raw(self) -> str:
@@ -52,6 +54,7 @@ class DotEnvParser:
             dot_env_lines = DotEnvLines(
                 lines_list,
                 with_comments=self.with_comments,
+                with_endlines=self.with_endlines,
                 debug=self.debug)
             env_vars = dot_env_lines.parse_lines()
 

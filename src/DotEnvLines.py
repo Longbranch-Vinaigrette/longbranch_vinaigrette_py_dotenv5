@@ -9,9 +9,11 @@ class DotEnvLines:
     def __init__(self,
                  lines: list,
                  with_comments: bool = False,
+                 with_endlines: bool = False,
                  debug: bool = False):
         self.lines = lines
         self.with_comments = with_comments
+        self.with_endlines = with_endlines
         self.debug = debug
 
     def parse_lines(self) -> dict:
@@ -32,10 +34,9 @@ class DotEnvLines:
 
             # Check if it's empty
             if dot_env_line.is_line_empty():
-                # Add endline
-                env_vars[self.endlines_keyword + str(index)] = "\n"
-
-                # Next
+                if self.with_endlines:
+                    # Add endline
+                    env_vars[self.endlines_keyword + str(index)] = "\n"
                 continue
 
             # A line may end with a '\', indicating that it continues
