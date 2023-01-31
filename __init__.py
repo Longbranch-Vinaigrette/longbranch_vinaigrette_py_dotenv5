@@ -11,7 +11,7 @@ class DotEnv5:
         self.path = path
         self.debug = debug
 
-    def get_parsed_dot_env(self, with_comments: False):
+    def get_parsed_dot_env(self, with_comments: bool = False):
         """Get parsed data in .env"""
         if self.debug:
             print("\nDotEnv5 -> get_parsed_dot_env():")
